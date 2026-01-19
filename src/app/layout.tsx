@@ -26,19 +26,20 @@ export const metadata: Metadata = {
 const theme = createTheme({
   colors: {
     brand: [
-      "#F2F9FF", // 0
-      "#DCEEFF", // 1
-      "#99c2ef", // 2
-      "#66a3e6", // 3
-      "#3385de", // 4
-      "#3070CA", // 5
-      "#265aa2", // 6
-      "#1d4379", // 7
-      "#132d51", // 8
-      "#0a1628", // 9
+      "#FFFBEB", // 0 - rất nhạt
+      "#FFF3C4", // 1
+      "#FFE88A", // 2
+      "#FFDD4D", // 3
+      "#FFD205", // 4 ⭐ primary
+      "#E6BE00", // 5 - hover
+      "#BFA000", // 6
+      "#998000", // 7
+      "#665500", // 8
+      "#332B00", // 9 - rất đậm
     ],
   },
   primaryColor: "brand",
+  primaryShade: 4, // dùng đúng màu #FFD205
 });
 
 export default function RootLayout({
@@ -51,7 +52,10 @@ export default function RootLayout({
       <head>
         <ColorSchemeScript />
       </head>
-      <body>
+      <body
+        suppressHydrationWarning={true}
+        className={`${geistSans.variable} ${geistMono.variable}`}
+      >
         <MantineProvider theme={theme}>{children}</MantineProvider>
       </body>
     </html>
