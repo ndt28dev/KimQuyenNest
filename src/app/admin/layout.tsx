@@ -1,14 +1,18 @@
-// src/app/(admin)/layout.tsx
+import React from "react";
+import { NavbarSimple } from "@/components/admin/NavbarSimple";
+import { Flex } from "@mantine/core";
+
 export default function AdminLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
   return (
-    <div className="flex min-h-screen">
-      <aside className="w-64 bg-gray-800 text-white p-4">Admin Sidebar</aside>
-
-      <main className="flex-1 p-6 bg-gray-100">{children}</main>
+    <div className="flex min-h-screen bg-gray-100">
+      <Flex w="100%">
+        <NavbarSimple />
+        {children}
+      </Flex>
     </div>
   );
 }
