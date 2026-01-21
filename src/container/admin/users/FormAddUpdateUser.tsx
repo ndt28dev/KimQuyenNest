@@ -18,7 +18,7 @@ type Props = {
   onSubmit: (data: Omit<User, "id" | "employeeCode">) => void;
 };
 
-const STORAGE_KEY = "employees";
+const STORAGE_KEY = "users";
 
 export function generateEmployeeCode(): string {
   const PREFIX = "KQN";
@@ -56,7 +56,7 @@ export function generateEmployeeCode(): string {
   return `${PREFIX}${year}${nextNumber}`;
 }
 
-export default function FormAddUser({
+export default function FormAddUpdateUser({
   onClose,
   onSubmit,
   initialValues,
@@ -69,7 +69,7 @@ export default function FormAddUser({
       employeeCode: initialValues?.employeeCode || generateEmployeeCode(),
       fullName: initialValues?.fullName || "",
       gender: initialValues?.gender || "",
-      dob: initialValues?.startDate ? new Date(initialValues.startDate) : null,
+      dob: initialValues?.dob ? new Date(initialValues.dob) : null,
       phone: initialValues?.phone || "",
       email: initialValues?.email || "",
       address: initialValues?.address || "",
@@ -119,7 +119,10 @@ export default function FormAddUser({
   });
 
   const handleSubmit = (values: typeof form.values) => {
-    onSubmit(values);
+    onSubmit({
+      ...values,
+      dob: values.dob ?? new Date(),
+    });
     form.reset();
     onClose();
   };
@@ -160,7 +163,7 @@ export default function FormAddUser({
           <DateInput
             label="Ngày sinh"
             placeholder="dd/mm/yyyy"
-            maxDate={new Date()} // ✅ chặn ngày tương lai
+            maxDate={new Date()}
             {...form.getInputProps("dob")}
           />
         </Group>

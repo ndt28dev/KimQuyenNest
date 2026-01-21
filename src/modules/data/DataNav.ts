@@ -6,6 +6,7 @@ import {
   IconLayoutDashboard,
   IconReportAnalytics,
   IconSettings,
+  IconCalculator,
 } from "@tabler/icons-react";
 
 export const dataNav = [
@@ -23,6 +24,11 @@ export const dataNav = [
     link: "/admin/attendance",
     label: "Chấm công",
     icon: IconClock,
+  },
+  {
+    link: "/admin/payrolls",
+    label: "Bảng lương",
+    icon: IconCalculator,
   },
   {
     link: "/admin/products",

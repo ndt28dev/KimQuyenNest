@@ -1,3 +1,5 @@
+import PageAttendance from "@/container/admin/attendance/PageAttendance";
+
 export default function page() {
-  return <div>page</div>;
+  return <PageAttendance />;
 }

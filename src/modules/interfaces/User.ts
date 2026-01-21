@@ -3,6 +3,7 @@ export type User = {
   employeeCode: string;
   fullName: string;
   gender: string;
+  dob: Date;
   phone: string;
   email: string;
   address: string;

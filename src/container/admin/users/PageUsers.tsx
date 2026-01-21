@@ -3,7 +3,6 @@
 import { useEffect, useState } from "react";
 import MyLayoutAdmin from "@/components/admin/MyLayoutAdmin";
 import TableData from "@/components/admin/TableData";
-import FormAddUser from "./FormAddUser";
 import FormModalAddUpdate from "@/components/admin/FormModalAddUpdate";
 
 import {
@@ -25,8 +24,10 @@ import { MRT_ColumnDef } from "mantine-react-table";
 import { User } from "@/modules/interfaces/User";
 import { formatDateUTC } from "@/utils/date";
 import { notifications } from "@mantine/notifications";
+import { modals } from "@mantine/modals";
+import FormAddUpdateUser from "./FormAddUpdateUser";
 
-const STORAGE_KEY = "employees";
+const STORAGE_KEY = "users";
 
 const getPersonsFromLocal = (): User[] => {
   if (typeof window === "undefined") return [];
@@ -119,7 +120,12 @@ export const personColumns = (
     header: "Chức vụ",
     size: 130,
   },
-
+  {
+    accessorKey: "startDate",
+    header: "Ngày vào",
+    size: 150,
+    Cell: ({ cell }) => formatDateUTC(cell.getValue<string>()),
+  },
   {
     accessorKey: "status",
     header: "Trạng thái",
@@ -190,6 +196,12 @@ export default function PageUsers() {
 
       setData(newData);
       savePersonsToLocal(newData);
+
+      notifications.show({
+        title: "Thành công",
+        message: "Cập nhật nhân viên thành công",
+        color: "green",
+      });
     } else {
       // 👉 ADD
       const newUser: User = {
@@ -201,6 +213,12 @@ export default function PageUsers() {
       const newData = [...data, newUser];
       setData(newData);
       savePersonsToLocal(newData);
+
+      notifications.show({
+        title: "Thành công",
+        message: "Thêm nhân viên thành công",
+        color: "green",
+      });
     }
 
     setEditingUser(null);
@@ -212,10 +230,31 @@ export default function PageUsers() {
     setIsOpenModal(true);
   };
 
-  const handleDelete = (row: User) => {
-    const newData = data.filter((p) => p.id !== row.id);
-    setData(newData);
-    savePersonsToLocal(newData);
+  const handleDelete = (user: User) => {
+    modals.openConfirmModal({
+      title: "Xác nhận xoá",
+      centered: true,
+      children: (
+        <Text size="sm">
+          Bạn có chắc chắn muốn xoá nhân viên <b>{user.fullName}</b> không?
+        </Text>
+      ),
+      labels: { confirm: "Xoá", cancel: "Huỷ" },
+      confirmProps: { color: "red" },
+
+      onConfirm: () => {
+        const newData = data.filter((p) => p.id !== user.id);
+        setData(newData);
+        savePersonsToLocal(newData);
+
+        notifications.show({
+          title: "Đã xoá",
+          message: "Nhân viên đã được xoá thành công",
+          color: "red",
+          autoClose: 3000,
+        });
+      },
+    });
   };
 
   const handleDeveloping = (feature: string) => {
@@ -277,27 +316,21 @@ export default function PageUsers() {
       </Fieldset>
 
       <FormModalAddUpdate
-        title="Thêm nhân viên"
+        title={editingUser ? "Sửa nhân viên" : "Thêm nhân viên"}
         opened={isOpenModal}
-        close={() => setIsOpenModal(false)}
+        close={() => {
+          setIsOpenModal(false);
+          setEditingUser(null);
+        }}
       >
-        <FormModalAddUpdate
-          title={editingUser ? "Sửa nhân viên" : "Thêm nhân viên"}
-          opened={isOpenModal}
-          close={() => {
+        <FormAddUpdateUser
+          initialValues={editingUser}
+          onSubmit={handleSubmit}
+          onClose={() => {
             setIsOpenModal(false);
             setEditingUser(null);
           }}
-        >
-          <FormAddUser
-            initialValues={editingUser}
-            onSubmit={handleSubmit}
-            onClose={() => {
-              setIsOpenModal(false);
-              setEditingUser(null);
-            }}
-          />
-        </FormModalAddUpdate>
+        />
       </FormModalAddUpdate>
     </MyLayoutAdmin>
   );

@@ -5,6 +5,7 @@ type Props = {
   close: () => void;
   title: string;
   children: React.ReactNode;
+  size?: string;
 };
 
 export default function FormModalAddUpdate({
@@ -12,12 +13,13 @@ export default function FormModalAddUpdate({
   close,
   title,
   children,
+  size = "xl",
 }: Props) {
   return (
     <Modal
       opened={opened}
       onClose={close}
-      size={"xl"}
+      size={size}
       title={
         <Text fw={500} size="lg">
           {title}

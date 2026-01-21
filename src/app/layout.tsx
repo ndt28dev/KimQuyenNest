@@ -12,6 +12,7 @@ import {
 } from "@mantine/core";
 import { Notifications } from "@mantine/notifications";
 import { Metadata } from "next";
+import { ModalsProvider } from "@mantine/modals";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -62,8 +63,10 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable}`}
       >
         <MantineProvider theme={theme}>
-          <Notifications position="top-right" />
-          {children}
+          <ModalsProvider>
+            <Notifications position="top-right" />
+            {children}
+          </ModalsProvider>
         </MantineProvider>
       </body>
     </html>
